@@ -1,0 +1,279 @@
+:root {
+  --header-height: 64px;
+  --footer-height: 64px;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.header {
+  width: 100%;
+  height: var(--header-height);
+}
+
+.header-title {
+  top: 14px;
+  font-size: 32px;
+}
+
+.footer {
+  width: 100%;
+  height: var(--footer-height);
+  justify-content: center;
+  background: var(--bg-lighter);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.footer-inner {
+  width: min(100%, 520px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 0 auto;
+}
+
+.main-content {
+  top: var(--header-height);
+  bottom: var(--footer-height);
+  width: 100%;
+}
+
+.feed-body {
+  position: absolute;
+  top: var(--header-height);
+  right: 0;
+  bottom: var(--footer-height);
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+
+.feed-stage {
+  position: relative;
+  width: min(576px, calc((100dvh - 152px) * 0.5379));
+  min-width: 412px;
+  aspect-ratio: 412 / 766;
+  flex: none;
+}
+
+.feed-media-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.feed-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: rotate(180deg);
+}
+
+.feed-status {
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  text-align: center;
+}
+
+.sidebar {
+  position: static;
+  width: auto;
+  height: auto;
+  mix-blend-mode: luminosity;
+}
+
+.freq-wrapper {
+  position: absolute;
+  top: 25%;
+  right: 10px;
+  width: 50px;
+  height: 172px;
+}
+
+.actions-wrapper {
+  position: absolute;
+  right: 10px;
+  bottom: 156px;
+  width: 50px;
+  height: auto;
+  gap: 24px;
+  mix-blend-mode: luminosity;
+}
+
+.actions-wrapper .like-button,
+.actions-wrapper > .next-button {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  flex: 0 0 50px;
+}
+
+.info-card {
+  top: auto;
+  right: auto;
+  bottom: 12px;
+  left: 20px;
+  width: calc(100% - 100px);
+  height: auto;
+  max-height: 150px;
+  padding: 0 0 4px;
+  mix-blend-mode: difference;
+}
+
+.composer-name {
+  min-height: 48px;
+  height: auto;
+  flex-basis: auto;
+  font-size: clamp(24px, 5vw, 32px);
+  overflow-wrap: anywhere;
+}
+
+.description {
+  width: 100%;
+  height: 56px;
+  flex-basis: 56px;
+}
+
+.description-text {
+  max-width: 100%;
+}
+
+.main-content.grid {
+  padding: 20px clamp(12px, 3vw, 36px);
+  overflow-x: auto;
+}
+
+.main-content.grid .page-title {
+  text-align: center;
+}
+
+.filter-section {
+  width: 350px;
+  flex: 0 0 164px;
+  margin: 0 auto;
+}
+
+.grid-cards {
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, 160px);
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.grid-card {
+  width: 160px;
+}
+
+.main-content.draft {
+  padding: 20px clamp(12px, 4vw, 36px);
+}
+
+.main-content.draft > .page-title,
+.draft-form {
+  width: min(100%, 760px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.input-body.media-preview {
+  padding: 16px;
+  gap: 16px;
+}
+
+.card-picture.preview {
+  max-width: 100%;
+  height: auto;
+}
+
+.feed-media.preview {
+  position: static;
+  width: min(292px, 100%);
+  height: auto;
+  aspect-ratio: 412 / 766;
+  object-fit: contain;
+  transform: none;
+}
+
+.main-content.login-page {
+  padding: 32px 16px;
+}
+
+.login-panel {
+  width: min(100%, 420px);
+}
+
+.feed-error {
+  top: 12px;
+  left: 50%;
+  width: min(372px, calc(100% - 24px));
+  transform: translateX(-50%);
+}
+
+.logout-error {
+  bottom: calc(var(--footer-height) + 6px);
+}
+
+@media (min-width: 700px) {
+  .actions-wrapper {
+    right: -70px;
+  }
+
+  .freq-wrapper {
+    right: -70px;
+  }
+}
+
+@media (min-width: 640px) {
+  .input-body.media-preview {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .card-picture.preview,
+  .feed-media.preview {
+    width: min(292px, calc(50% - 8px));
+    max-width: calc(50% - 8px);
+    flex: 1 1 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .footer-inner .nav-btn {
+    flex-basis: 72px;
+    width: 72px;
+  }
+
+  .footer-inner .nav-label {
+    font-size: 11px;
+  }
+
+  .main-content.grid {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}

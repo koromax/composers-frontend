@@ -40,55 +40,57 @@ export function BottomNavigation() {
 
   return (
     <footer className="footer">
-      <Link
-        aria-current={isFeed ? 'page' : undefined}
-        className={`nav-btn${isFeed ? ' active' : ''}`}
-        draggable={false}
-        to="/composers-feed"
-      >
-        <span className="nav-label">Лента</span>
-      </Link>
-      {isAuthenticated ? (
+      <nav aria-label="Основная навигация" className="footer-inner">
         <Link
-          aria-current={pathname === '/composers-add' ? 'page' : undefined}
-          className={`nav-btn${pathname === '/composers-add' ? ' active' : ''}`}
+          aria-current={isFeed ? 'page' : undefined}
+          className={`nav-btn${isFeed ? ' active' : ''}`}
           draggable={false}
-          to="/composers-add"
+          to="/composers-feed"
         >
-          <span className="nav-label">Добавление</span>
+          <span className="nav-label">Лента</span>
         </Link>
-      ) : (
-        <span aria-disabled="true" className="nav-btn nav-disabled">
-          <span className="nav-label">Добавление</span>
-        </span>
-      )}
-      <Link
-        aria-current={pathname === '/composers-grid' ? 'page' : undefined}
-        className={`nav-btn${pathname === '/composers-grid' ? ' active' : ''}`}
-        draggable={false}
-        to="/composers-grid"
-      >
-        <span className="nav-label">Плитка</span>
-      </Link>
-      {isAuthenticated ? (
-        <button
-          className={`nav-btn nav-auth${loading ? ' request-pending' : ''}`}
-          disabled={loading}
-          onClick={handleLogout}
-          type="button"
-        >
-          <span className="nav-label">{loading ? '...' : 'Выход'}</span>
-        </button>
-      ) : (
+        {isAuthenticated ? (
+          <Link
+            aria-current={pathname === '/composers-add' ? 'page' : undefined}
+            className={`nav-btn${pathname === '/composers-add' ? ' active' : ''}`}
+            draggable={false}
+            to="/composers-add"
+          >
+            <span className="nav-label">Добавление</span>
+          </Link>
+        ) : (
+          <span aria-disabled="true" className="nav-btn nav-disabled">
+            <span className="nav-label">Добавление</span>
+          </span>
+        )}
         <Link
-          aria-current={pathname === '/login' ? 'page' : undefined}
-          className={`nav-btn${pathname === '/login' ? ' active' : ''}`}
+          aria-current={pathname === '/composers-grid' ? 'page' : undefined}
+          className={`nav-btn${pathname === '/composers-grid' ? ' active' : ''}`}
           draggable={false}
-          to="/login"
+          to="/composers-grid"
         >
-          <span className="nav-label">Вход</span>
+          <span className="nav-label">Плитка</span>
         </Link>
-      )}
+        {isAuthenticated ? (
+          <button
+            className={`nav-btn nav-auth${loading ? ' request-pending' : ''}`}
+            disabled={loading}
+            onClick={handleLogout}
+            type="button"
+          >
+            <span className="nav-label">{loading ? '...' : 'Выход'}</span>
+          </button>
+        ) : (
+          <Link
+            aria-current={pathname === '/login' ? 'page' : undefined}
+            className={`nav-btn${pathname === '/login' ? ' active' : ''}`}
+            draggable={false}
+            to="/login"
+          >
+            <span className="nav-label">Вход</span>
+          </Link>
+        )}
+      </nav>
       {logoutError && (
         <div aria-live="polite" className="logout-error" role="alert">
           {logoutError}

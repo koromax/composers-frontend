@@ -3,6 +3,7 @@ import axios from 'axios'
 import type { DsComposer } from '../api/Api'
 import { api, proxyMediaUrl } from '../api'
 import { keepPendingFeedbackVisible } from '../api/requestTiming'
+import { isMockDataSource } from '../config/dataSource'
 import { COMPOSERS_MOCK, type Composer } from '../data/composers'
 
 interface CreateComposerDraftParams {
@@ -138,6 +139,16 @@ export const fetchComposers = createAsyncThunk<
   FetchComposersParams
 >('composers/fetchComposers', async (params) => {
   const startedAt = Date.now()
+  if (isMockDataSource) {
+    await keepPendingFeedbackVisible(startedAt)
+    return {
+      composers: COMPOSERS_MOCK.filter(
+        ({ freq1 }) => freq1 >= params.minFreq && freq1 <= params.maxFreq,
+      ),
+      warning: null,
+    }
+  }
+
   try {
     const response = await api.composers.composersList({
       min_freq: params.minFreq,
@@ -169,6 +180,25 @@ export const fetchComposerFeed = createAsyncThunk<
   FetchComposerFeedParams
 >('composers/fetchComposerFeed', async (params) => {
   const startedAt = Date.now()
+  if (isMockDataSource) {
+    const currentIndex =
+      params.id === undefined
+        ? -1
+        : COMPOSERS_MOCK.findIndex(({ id }) => id === params.id)
+    const fallbackIndex =
+      params.next && currentIndex >= 0
+        ? (currentIndex + 1) % COMPOSERS_MOCK.length
+        : currentIndex >= 0
+          ? currentIndex
+          : 0
+
+    await keepPendingFeedbackVisible(startedAt)
+    return {
+      composer: COMPOSERS_MOCK[fallbackIndex],
+      warning: null,
+    }
+  }
+
   try {
     const response = await api.composer.feedList(
       params.id === undefined

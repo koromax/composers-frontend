@@ -113,7 +113,7 @@ export function FeedPage() {
             {feedError}
           </div>
         )}
-        <section className="info-card">
+        <section className="feed-stage feed-status">
           {feedLoading ? 'Загрузка композиторов…' : 'Композиторы не найдены'}
         </section>
       </main>
@@ -122,38 +122,42 @@ export function FeedPage() {
 
   return (
     <main className="feed-body">
-      <video
-        aria-label={`Видео о композиторе ${composer.name}`}
-        autoPlay
-        className="feed-media"
-        key={composer.id}
-        loop
-        muted
-        preload="auto"
-        playsInline
-        poster={composer.imageUrl || defaultCover}
-        src={composer.videoUrl || defaultVideo}
-      >
-        Ваш браузер не поддерживает воспроизведение видео.
-      </video>
-
       {feedError && (
         <div aria-live="polite" className="feed-error" role="alert">
           {feedError}
         </div>
       )}
 
-      <aside className="sidebar">
-        <div className="freq-wrapper">
-          <div className="freq-field">
-            <div className="label-text">Freq 1</div>
-            <div className="square-bg text-value">{composer.freq1}</div>
-          </div>
-          <div className="freq-field">
-            <div className="label-text">Freq 2</div>
-            <div className="square-bg text-value">{composer.freq2}</div>
-          </div>
+      <section className="feed-stage">
+        <div className="feed-media-frame">
+          <video
+            aria-label={`Видео о композиторе ${composer.name}`}
+            autoPlay
+            className="feed-media"
+            key={composer.id}
+            loop
+            muted
+            preload="auto"
+            playsInline
+            poster={composer.imageUrl || defaultCover}
+            src={composer.videoUrl || defaultVideo}
+          >
+            Ваш браузер не поддерживает воспроизведение видео.
+          </video>
         </div>
+
+        <aside className="sidebar">
+          <div className="freq-wrapper">
+            <div className="freq-field">
+              <div className="label-text">Freq 1</div>
+              <div className="square-bg text-value">{composer.freq1}</div>
+            </div>
+            <div className="freq-field">
+              <div className="label-text">Freq 2</div>
+              <div className="square-bg text-value">{composer.freq2}</div>
+            </div>
+          </div>
+        </aside>
 
         <div className="actions-wrapper">
           <div className="action">
@@ -190,32 +194,32 @@ export function FeedPage() {
             </svg>
           </Button>
         </div>
-      </aside>
 
-      <section className="info-card">
-        {mutationError && (
-          <div aria-live="polite" role="alert">
-            {mutationError}
-          </div>
-        )}
-        <div className="composer-name">
-          <span>{composer.name}</span>
-        </div>
-        <div className={`description${expanded ? ' expanded' : ''}`}>
-          <div className="description-text" ref={descriptionTextRef}>
-            {composer.description}
-          </div>
-          {hasMoreDescription && (
-            <button
-              aria-expanded={expanded}
-              className="description-show"
-              onClick={() => setExpanded((value) => !value)}
-              type="button"
-            >
-              {expanded ? 'Скрыть' : 'Показать больше'}
-            </button>
+        <section className="info-card">
+          {mutationError && (
+            <div aria-live="polite" role="alert">
+              {mutationError}
+            </div>
           )}
-        </div>
+          <div className="composer-name">
+            <span>{composer.name}</span>
+          </div>
+          <div className={`description${expanded ? ' expanded' : ''}`}>
+            <div className="description-text" ref={descriptionTextRef}>
+              {composer.description}
+            </div>
+            {hasMoreDescription && (
+              <button
+                aria-expanded={expanded}
+                className="description-show"
+                onClick={() => setExpanded((value) => !value)}
+                type="button"
+              >
+                {expanded ? 'Скрыть' : 'Показать больше'}
+              </button>
+            )}
+          </div>
+        </section>
       </section>
     </main>
   )

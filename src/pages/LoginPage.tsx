@@ -8,6 +8,7 @@ import {
   clearAuthError,
   loginSucceeded,
 } from '../slices/authSlice'
+import { isMockDataSource } from '../config/dataSource'
 import type { AppDispatch, RootState } from '../store'
 
 export function LoginPage() {
@@ -21,6 +22,20 @@ export function LoginPage() {
 
   if (isAuthenticated) {
     return <Navigate replace to="/composers-grid" />
+  }
+
+  if (isMockDataSource) {
+    return (
+      <main className="main-content login-page">
+        <section aria-labelledby="login-title" className="login-panel">
+          <h1 id="login-title">Вход недоступен</h1>
+          <p>
+            Сейчас включён демонстрационный режим с mock-данными. Для
+            авторизации и изменения данных запустите приложение в режиме API.
+          </p>
+        </section>
+      </main>
+    )
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
