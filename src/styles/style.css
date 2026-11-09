@@ -159,6 +159,7 @@ body {
     position: absolute;
     left: 352px;
     top: 221px;
+    mix-blend-mode: luminosity;
 
     display: flex;
     flex-direction: column;
@@ -282,6 +283,7 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     gap: 1px; 
+    mix-blend-mode: difference;
 }
 
 .composer-name {
@@ -292,7 +294,6 @@ body {
     font-weight: 700;
     color: var(--text);
     display: flex;
-    mix-blend-mode: difference;
 }
 
 .composer-name span {
@@ -306,7 +307,6 @@ body {
     height: 56px;
     flex: 0 0 56px;
     overflow: hidden;
-    mix-blend-mode: difference;
     display: flex;
     flex-direction: column;
 }
@@ -349,8 +349,12 @@ body {
     padding: 30px;
 }
 
+.draft-form {
+    width: 100%;
+}
+
 .input-section {
-    width: fill;
+    width: 100%;
     margin: 0 auto 16px auto;
     background: var(--bg-darker);
     border-radius: 2px;
@@ -367,7 +371,7 @@ body {
 
 .input-body {
     background: var(--bg-darker);
-    width: 352px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     padding: 14px;
@@ -379,6 +383,7 @@ body {
     padding: 20px 30px;
     flex-direction: column;
     gap: 10px;
+    align-items: center;
 }
 
 .card-picture.preview {
@@ -395,6 +400,7 @@ body {
     height: 542px;  /*  542 = 292 * (765 / 412)  */
     object-fit: cover;
     position: static;
+    transform: none;
     background: var(--bg-lighter);
 }
 

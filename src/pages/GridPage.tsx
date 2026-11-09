@@ -1,33 +1,58 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import { GridCard } from '../components/GridCard'
-import { COMPOSERS_MOCK } from '../data/composers'
+import {
+  deleteComposer,
+  fetchComposers,
+  toggleComposerLike,
+} from '../slices/composersSlice'
+import {
+  applyRange,
+  setMaximum,
+  setMinimum,
+} from '../slices/composersFilterSlice'
+import type { AppDispatch, RootState } from '../store'
 
 export function GridPage() {
-  const [range, setRange] = useState({ min: 0, max: 100 })
-  const [appliedRange, setAppliedRange] = useState({ min: 0, max: 100 })
-  const [activeThumb, setActiveThumb] = useState<'min' | 'max'>('max')
-  const [deletedIds, setDeletedIds] = useState<number[]>([])
-  const [likeCounts, setLikeCounts] = useState<Record<number, number>>({})
-  const filterMin = Math.min(appliedRange.min, appliedRange.max)
-  const filterMax = Math.max(appliedRange.min, appliedRange.max)
-
-  const composers = COMPOSERS_MOCK.filter(
-    ({ freq1, id }) =>
-      !deletedIds.includes(id) &&
-      freq1 >= filterMin &&
-      freq1 <= filterMax,
+  const dispatch = useDispatch<AppDispatch>()
+  const { range, appliedRange } = useSelector(
+    (state: RootState) => state.composersFilter,
   )
+  const {
+    items: composers,
+    composersLoading,
+    error,
+    mutationError,
+    likedById,
+    pendingLikeIds,
+    pendingDeleteIds,
+  } = useSelector((state: RootState) => state.composers)
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  )
+  const [activeThumb, setActiveThumb] = useState<'min' | 'max'>('max')
+  const visibleComposers = composers
+
+  useEffect(() => {
+    dispatch(
+      fetchComposers({
+        minFreq: appliedRange.min,
+        maxFreq: appliedRange.max,
+        allowMockFallback: !isAuthenticated,
+      }),
+    )
+  }, [appliedRange.max, appliedRange.min, dispatch, isAuthenticated])
 
   function updateMinimum(value: number) {
-    setRange((current) => ({ ...current, min: value }))
+    dispatch(setMinimum(value))
     if (value === range.max) {
       setActiveThumb('max')
     }
   }
 
   function updateMaximum(value: number) {
-    setRange((current) => ({ ...current, max: value }))
+    dispatch(setMaximum(value))
     if (value === range.min) {
       setActiveThumb('min')
     }
@@ -41,10 +66,7 @@ export function GridPage() {
         className="filter-section"
         onSubmit={(event) => {
           event.preventDefault()
-          setAppliedRange({
-            min: Math.min(range.min, range.max),
-            max: Math.max(range.min, range.max),
-          })
+          dispatch(applyRange())
         }}
       >
         <div className="filter-head">
@@ -73,6 +95,7 @@ export function GridPage() {
               <input
                 aria-label="Значение первого ползунка"
                 className="range-input"
+                disabled={composersLoading}
                 max="100"
                 min="0"
                 onChange={(event) => updateMinimum(Number(event.target.value))}
@@ -86,6 +109,7 @@ export function GridPage() {
               <input
                 aria-label="Значение второго ползунка"
                 className="range-input"
+                disabled={composersLoading}
                 max="100"
                 min="0"
                 onChange={(event) => updateMaximum(Number(event.target.value))}
@@ -98,32 +122,57 @@ export function GridPage() {
               />
             </div>
           </div>
-          <Button className="apply-btn" type="submit" variant="custom">
+          <Button
+            className={`apply-btn${composersLoading ? ' request-pending' : ''}`}
+            disabled={composersLoading}
+            type="submit"
+            variant="custom"
+          >
             Применить
           </Button>
         </div>
       </form>
 
+      {error && (
+        <div aria-live="polite" className="composers-message" role="alert">
+          {error}
+        </div>
+      )}
+      {mutationError && (
+        <div aria-live="polite" className="composers-message" role="alert">
+          {mutationError}
+        </div>
+      )}
       <div className="grid-cards">
-        {composers.length === 0 ? (
-          <div className="no-items">Композиторы не найдены</div>
+        {visibleComposers.length === 0 ? (
+          composersLoading ? null : (
+            <div className="no-items">Композиторы не найдены</div>
+          )
         ) : (
-          composers.map((composer) => (
+          visibleComposers.map((composer) => (
             <GridCard
-              indicator={{
-                ...composer,
-                likesCount: likeCounts[composer.id] ?? composer.likesCount,
-              }}
+              indicator={composer}
+              canDelete={isAuthenticated && composer.currentUserIsCreator}
+              isLiked={likedById[composer.id] ?? false}
+              isDisabled={
+                composersLoading ||
+                !isAuthenticated ||
+                pendingLikeIds.includes(composer.id) ||
+                pendingDeleteIds.includes(composer.id)
+              }
+              isLikePending={pendingLikeIds.includes(composer.id)}
+              isDeletePending={pendingDeleteIds.includes(composer.id)}
               key={composer.id}
               onDelete={() =>
-                setDeletedIds((ids) => [...ids, composer.id])
+                dispatch(deleteComposer({ composerId: composer.id }))
               }
               onLike={() =>
-                setLikeCounts((counts) => ({
-                  ...counts,
-                  [composer.id]:
-                    (counts[composer.id] ?? composer.likesCount) + 1,
-                }))
+                dispatch(
+                  toggleComposerLike({
+                    composerId: composer.id,
+                    isLiked: !(likedById[composer.id] ?? false),
+                  }),
+                )
               }
             />
           ))

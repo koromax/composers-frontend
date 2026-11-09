@@ -4,21 +4,37 @@ import type { Composer } from '../data/composers'
 
 interface GridCardProps {
   indicator: Composer
+  canDelete?: boolean
+  isLiked?: boolean
+  isDisabled?: boolean
+  isLikePending?: boolean
+  isDeletePending?: boolean
   onLike: () => void
   onDelete: () => void
 }
 
-export function GridCard({ indicator, onLike, onDelete }: GridCardProps) {
+export function GridCard({
+  indicator,
+  canDelete = false,
+  isLiked = false,
+  isDisabled = false,
+  isLikePending = false,
+  isDeletePending = false,
+  onLike,
+  onDelete,
+}: GridCardProps) {
   return (
     <article className="grid-card">
       <Link
         aria-label={`Открыть карточку ${indicator.name}`}
         className="card-link"
+        draggable={false}
         to={`/composers-feed/${indicator.id}`}
       >
         <img
           alt={indicator.name}
           className="card-picture"
+          draggable={false}
           src={indicator.imageUrl || defaultCover}
         />
         <div className="card-info">
@@ -28,14 +44,16 @@ export function GridCard({ indicator, onLike, onDelete }: GridCardProps) {
       </Link>
       <div className="card-footer">
         <button
-          aria-label={`Поставить лайк ${indicator.name}`}
-          className="card-likes"
+          aria-label={`${isLiked ? 'Убрать лайк' : 'Поставить лайк'} ${indicator.name}`}
+          aria-pressed={isLiked}
+          className={`card-likes${isLiked ? ' is-liked' : ''}${isLikePending ? ' request-pending' : ''}`}
+          disabled={isDisabled}
           onClick={onLike}
           type="button"
         >
           <svg
             aria-hidden="true"
-            className="like-icon"
+            className={`like-icon${isLiked ? ' liked' : ''}`}
             viewBox="0 0 30 27"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -43,14 +61,17 @@ export function GridCard({ indicator, onLike, onDelete }: GridCardProps) {
           </svg>
           <span className="like-val">{indicator.likesCount}</span>
         </button>
-        <button
-          aria-label={`Удалить ${indicator.name} из плитки`}
-          className="card-delete-btn"
-          onClick={onDelete}
-          type="button"
-        >
-          Удалить
-        </button>
+        {canDelete && (
+          <button
+            aria-label={`Удалить ${indicator.name} из плитки`}
+            className={`card-delete-btn${isDeletePending ? ' request-pending' : ''}`}
+            disabled={isDisabled}
+            onClick={onDelete}
+            type="button"
+          >
+            Удалить
+          </button>
+        )}
       </div>
     </article>
   )

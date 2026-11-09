@@ -3,6 +3,8 @@ import { BottomNavigation } from './components/BottomNavigation'
 import { Header } from './components/Header'
 import { FeedPage } from './pages/FeedPage'
 import { GridPage } from './pages/GridPage'
+import { LoginPage } from './pages/LoginPage'
+import { AddComposerPage } from './pages/AddComposerPage'
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route element={<FeedPage />} path="/composers-feed" />
           <Route element={<FeedPage />} path="/composers-feed/:id" />
           <Route element={<GridPage />} path="/composers-grid" />
+          <Route element={<AddComposerPage />} path="/composers-add" />
+          <Route element={<LoginPage />} path="/login" />
           <Route element={<Navigate replace to="/composers-feed" />} path="*" />
         </Routes>
         <BottomNavigation />

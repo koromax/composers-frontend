@@ -9,6 +9,8 @@ export interface Composer {
   likesCount: number
   imageUrl: string
   videoUrl: string
+  currentUserIsCreator?: boolean
+  currentUserLiked?: boolean
 }
 
 export const COMPOSERS_MOCK: Composer[] = [

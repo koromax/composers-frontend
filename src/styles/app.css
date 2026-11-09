@@ -164,6 +164,201 @@
   stroke-width: 2.5;
 }
 
+.like-icon.liked {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.card-likes.is-liked .like-val {
+  color: var(--accent);
+}
+
 .footer .nav-disabled .nav-label {
   color: var(--text);
+}
+
+.composers-message {
+  padding: 10px 0 0;
+  color: var(--text);
+  font-size: 12px;
+  text-align: center;
+}
+
+.nav-auth {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+
+.nav-auth:disabled {
+  opacity: 0.6;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  padding: 56px 24px;
+}
+
+.login-panel {
+  width: 100%;
+}
+
+.login-panel h1 {
+  margin-bottom: 24px;
+  color: var(--text);
+  font-size: 24px;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-form label {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.login-form input {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--bg-lighter);
+  border-radius: 2px;
+  background: var(--bg-darker);
+  color: var(--text);
+}
+
+.login-form button {
+  min-height: 50px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--accent);
+  color: var(--text);
+  font: inherit;
+}
+
+.login-form button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.login-error,
+.logout-error {
+  color: #ff9a9a;
+  font-size: 12px;
+}
+
+.login-error {
+  margin-bottom: 16px;
+}
+
+.logout-error {
+  position: absolute;
+  right: 12px;
+  bottom: 76px;
+  left: 12px;
+  padding: 6px;
+  background: var(--bg-darker);
+  text-align: center;
+}
+
+.app-container a,
+.app-container button,
+.app-container img {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.request-pending {
+  background-image: linear-gradient(
+    110deg,
+    var(--accent) 25%,
+    #b9aaff 45%,
+    #7d60ff 60%,
+    #6248d8 80%
+  ) !important;
+  background-size: 250% 100% !important;
+  animation: request-gradient 1.15s linear infinite;
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 28%);
+  opacity: 1 !important;
+}
+
+.filter-body .apply-btn.btn-custom.request-pending:hover,
+.filter-body .apply-btn.btn-custom.request-pending:active {
+  background-image: linear-gradient(
+    110deg,
+    var(--accent) 25%,
+    #b9aaff 45%,
+    #7d60ff 60%,
+    #6248d8 80%
+  ) !important;
+  background-size: 250% 100% !important;
+}
+
+.like-button.request-pending::after,
+.next-button.request-pending::after {
+  background: linear-gradient(
+    110deg,
+    var(--accent) 25%,
+    #b9aaff 45%,
+    #7d60ff 60%,
+    #6248d8 80%
+  );
+  background-size: 250% 100%;
+  opacity: 1;
+  animation: request-gradient 1.15s linear infinite;
+}
+
+@keyframes request-gradient {
+  to {
+    background-position: -250% 0;
+  }
+}
+
+.draft-form {
+  width: 100%;
+}
+
+.draft-form .input-section {
+  width: 100%;
+}
+
+.draft-form .input-body {
+  width: 100%;
+}
+
+.draft-form .input-field input:disabled,
+.draft-form .input-field textarea:disabled {
+  opacity: 0.72;
+}
+
+.media-format-hint {
+  color: rgb(239 239 241 / 70%);
+  font-size: 11px;
+}
+
+.draft-form .card-picture.preview {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.draft-form .feed-media.preview {
+  display: block;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.draft-form .save-btn {
+  font: inherit;
+}
+
+.draft-form .save-btn:disabled {
+  cursor: wait;
 }
