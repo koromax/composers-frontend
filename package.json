@@ -4,8 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "vite --mode api",
+    "dev:mock": "vite --mode mock",
+    "build": "npm run build:api",
+    "build:api": "tsc -b && vite build --mode api",
+    "build:mock": "tsc -b && vite build --mode mock",
+    "postbuild:mock": "node scripts/create-pages-fallback.mjs",
+    "deploy": "npm run build:mock && gh-pages -d dist",
     "preview": "vite preview",
     "generate-api": "node scripts/generate-api.mjs"
   },
@@ -23,8 +28,10 @@
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^4.7.0",
+    "gh-pages": "^6.3.0",
     "swagger-typescript-api": "^13.13.0",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-pwa": "^1.1.0"
   }
 }

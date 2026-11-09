@@ -8,7 +8,7 @@ import { AddComposerPage } from './pages/AddComposerPage'
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="app-container">
         <Header />
         <Routes>
