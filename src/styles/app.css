@@ -184,6 +184,22 @@
   text-align: center;
 }
 
+.feed-error {
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  z-index: 6;
+  width: 372px;
+  padding: 8px 12px;
+  border-radius: 2px;
+  background: rgb(38 38 38 / 85%);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
+
 .nav-auth {
   border: 0;
   background: transparent;

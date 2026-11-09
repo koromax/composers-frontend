@@ -108,9 +108,13 @@ export function FeedPage() {
   if (!composer) {
     return (
       <main className="feed-body">
+        {feedError && (
+          <div aria-live="polite" className="feed-error" role="alert">
+            {feedError}
+          </div>
+        )}
         <section className="info-card">
           {feedLoading ? 'Загрузка композиторов…' : 'Композиторы не найдены'}
-          {feedError && <div role="alert">{feedError}</div>}
         </section>
       </main>
     )
@@ -132,6 +136,12 @@ export function FeedPage() {
       >
         Ваш браузер не поддерживает воспроизведение видео.
       </video>
+
+      {feedError && (
+        <div aria-live="polite" className="feed-error" role="alert">
+          {feedError}
+        </div>
+      )}
 
       <aside className="sidebar">
         <div className="freq-wrapper">
@@ -183,11 +193,6 @@ export function FeedPage() {
       </aside>
 
       <section className="info-card">
-        {feedError && (
-          <div aria-live="polite" role="alert">
-            {feedError}
-          </div>
-        )}
         {mutationError && (
           <div aria-live="polite" role="alert">
             {mutationError}
