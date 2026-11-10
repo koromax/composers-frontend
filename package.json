@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode api",
+    "dev:https": "vite --mode api-https --host 0.0.0.0",
     "dev:mock": "vite --mode mock",
     "build": "npm run build:api",
     "build:api": "tsc -b && vite build --mode api",

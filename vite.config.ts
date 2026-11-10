@@ -1,11 +1,25 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, '.', '')
+  const isLanHttps = mode === 'api-https'
   const base =
     command === 'build' && mode === 'mock' ? '/composers-frontend/' : '/'
+  const certificatePath = resolve('certs/cert.crt')
+  const privateKeyPath = resolve('certs/cert.key')
+
+  if (
+    isLanHttps &&
+    (!existsSync(certificatePath) || !existsSync(privateKeyPath))
+  ) {
+    throw new Error(
+      'HTTPS certificates not found. Generate certs/dev-cert.pem and certs/dev-key.pem with mkcert; see the README.',
+    )
+  }
 
   return {
     plugins: [
@@ -46,6 +60,13 @@ export default defineConfig(({ command, mode }) => {
     ],
     base,
     server: {
+      ...(isLanHttps && {
+        host: '0.0.0.0',
+        https: {
+          cert: readFileSync(certificatePath),
+          key: readFileSync(privateKeyPath),
+        },
+      }),
       proxy: {
         '/api': {
           target: env.VITE_API_PROXY_TARGET ?? 'http://localhost:8080',
