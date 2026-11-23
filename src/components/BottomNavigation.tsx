@@ -1,15 +1,29 @@
+import axios from 'axios'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { getAuthError, logout } from '../api/auth'
+import { keepPendingFeedbackVisible } from '../api/requestTiming'
 import {
   authRequestFailed,
   authRequestStarted,
   logoutSucceeded,
 } from '../slices/authSlice'
 import { resetRange } from '../slices/composersFilterSlice'
-import { clearComposerDraft } from '../slices/composersSlice'
 import type { AppDispatch, RootState } from '../store'
+
+function getAuthError(error: unknown): string {
+  if (axios.isAxiosError<{ error?: string }>(error)) {
+    return (
+      error.response?.data?.error ??
+      error.message ??
+      'Не удалось связаться с сервисом авторизации.'
+    )
+  }
+
+  return error instanceof Error
+    ? error.message
+    : 'Не удалось выполнить запрос авторизации.'
+}
 
 export function BottomNavigation() {
   const { pathname } = useLocation()
@@ -24,14 +38,25 @@ export function BottomNavigation() {
   async function handleLogout() {
     dispatch(authRequestStarted())
     setLogoutError(null)
+    const startedAt = Date.now()
 
     try {
-      await logout()
+      const token = window.localStorage.getItem('access_token')
+      if (!token) {
+        throw new Error('Токен авторизации не найден.')
+      }
+
+      await axios.post('/api/user/logout', undefined, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      await keepPendingFeedbackVisible(startedAt)
+      window.localStorage.removeItem('access_token')
       dispatch(logoutSucceeded())
       dispatch(resetRange())
-      dispatch(clearComposerDraft())
       navigate('/composers-feed')
     } catch (requestError) {
+      await keepPendingFeedbackVisible(startedAt)
       const message = getAuthError(requestError)
       dispatch(authRequestFailed(message))
       setLogoutError(message)

@@ -1,7 +1,8 @@
+import axios from 'axios'
 import { useState, type FormEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { getAuthError, login } from '../api/auth'
+import { keepPendingFeedbackVisible } from '../api/requestTiming'
 import {
   authRequestFailed,
   authRequestStarted,
@@ -9,6 +10,24 @@ import {
   loginSucceeded,
 } from '../slices/authSlice'
 import type { AppDispatch, RootState } from '../store'
+
+interface LoginResponse {
+  access_token: string
+}
+
+function getAuthError(error: unknown): string {
+  if (axios.isAxiosError<{ error?: string }>(error)) {
+    return (
+      error.response?.data?.error ??
+      error.message ??
+      'Не удалось связаться с сервисом авторизации.'
+    )
+  }
+
+  return error instanceof Error
+    ? error.message
+    : 'Не удалось выполнить запрос авторизации.'
+}
 
 export function LoginPage() {
   const dispatch = useDispatch<AppDispatch>()
@@ -25,13 +44,26 @@ export function LoginPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (loading) return
+
     dispatch(authRequestStarted())
+    const startedAt = Date.now()
 
     try {
-      await login(loginValue, password)
+      const { data } = await axios.post<LoginResponse>('/api/user/login', {
+        login: loginValue,
+        password,
+      })
+      if (!data.access_token) {
+        throw new Error('Сервис авторизации не вернул токен.')
+      }
+
+      await keepPendingFeedbackVisible(startedAt)
+      window.localStorage.setItem('access_token', data.access_token)
       dispatch(loginSucceeded(loginValue))
       navigate('/composers-grid', { replace: true })
     } catch (requestError) {
+      await keepPendingFeedbackVisible(startedAt)
       dispatch(authRequestFailed(getAuthError(requestError)))
     }
   }

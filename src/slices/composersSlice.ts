@@ -4,6 +4,7 @@ import type { DsComposer } from '../api/Api'
 import { api, proxyMediaUrl } from '../api'
 import { keepPendingFeedbackVisible } from '../api/requestTiming'
 import { COMPOSERS_MOCK, type Composer } from '../data/composers'
+import { logoutSucceeded } from './authSlice'
 
 interface CreateComposerDraftParams {
   name: string
@@ -304,14 +305,10 @@ export const deleteComposer = createAsyncThunk<
 const composersSlice = createSlice({
   name: 'composers',
   initialState,
-  reducers: {
-    clearComposerDraft(state) {
-      state.draft = null
-      state.draftChecked = false
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(logoutSucceeded, () => initialState)
       .addCase(fetchComposers.pending, (state, action) => {
         state.composersLoading = true
         state.composersRequestId = action.meta.requestId
@@ -453,7 +450,5 @@ const composersSlice = createSlice({
       })
   },
 })
-
-export const { clearComposerDraft } = composersSlice.actions
 
 export default composersSlice.reducer
