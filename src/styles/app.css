@@ -10,7 +10,7 @@
 }
 
 .nav-disabled .nav-label {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .like-button {
@@ -357,7 +357,7 @@
 
 .media-format-hint {
   color: rgb(239 239 241 / 70%);
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .draft-form .card-picture.preview {

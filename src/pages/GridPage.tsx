@@ -70,9 +70,7 @@ export function GridPage() {
         }}
       >
         <div className="filter-head">
-          Фильтр частоты доминирующего
-          <br />
-          интервала
+          <span>Фильтр частоты доминирующего интервала</span>
         </div>
         <div className="filter-body">
           <div className="slider-container">
